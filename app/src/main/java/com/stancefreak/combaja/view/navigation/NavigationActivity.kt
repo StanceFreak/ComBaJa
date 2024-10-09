@@ -21,6 +21,7 @@ import com.stancefreak.combaja.R
 import com.stancefreak.combaja.utils.NavRoute
 import com.stancefreak.combaja.view.home.HomeScreen
 import com.stancefreak.combaja.view.home.HomeViewModel
+import com.stancefreak.combaja.view.seeall.SeeAllScreen
 import com.stancefreak.combaja.view.splash.SplashScreen
 
 class NavigationActivity: ComponentActivity() {
@@ -35,6 +36,9 @@ class NavigationActivity: ComponentActivity() {
                 }
                 composable(NavRoute.Home.route) {
                     HomeScreen(navController, homeViewModel)
+                }
+                composable(NavRoute.SeeAll.route) {
+                    SeeAllScreen(navController, homeViewModel)
                 }
             }
         }
