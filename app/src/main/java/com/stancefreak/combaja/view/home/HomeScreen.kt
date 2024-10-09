@@ -3,6 +3,7 @@ package com.stancefreak.combaja.view.home
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -56,6 +57,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.stancefreak.combaja.R
 import com.stancefreak.combaja.utils.InlineContent
+import com.stancefreak.combaja.utils.NavRoute
 import com.stancefreak.combaja.view.splash.SplashScreen
 
 @Composable
@@ -114,6 +116,10 @@ fun HomeScreen(
                         .fillMaxHeight()
                         .background(Color.Red))
                     Text(
+                        modifier = Modifier
+                            .clickable {
+                                navController.navigate(NavRoute.SeeAll.route)
+                            },
                         text = forwardText,
                         inlineContent = InlineContent(
                             Icons.AutoMirrored.Filled.KeyboardArrowRight
@@ -133,6 +139,7 @@ fun HomeScreen(
                     }
                 }
                 movieList?.let { movie ->
+                    // repeating list like tix.id app
                     val startIndex = Int.MAX_VALUE / 2
                     val pagerState = rememberPagerState(
                         initialPage = startIndex,
@@ -158,45 +165,6 @@ fun HomeScreen(
                         }
                     }
                 }
-
-//                movies?.let {
-//                    for (item in it) {
-//                        LazyRow {
-//                            items(item.genreList!!.genres) { genre ->
-//                                HomePopularGenres(genre, selectedGenre) { genreId ->
-//                                    selectedGenre = genreId
-//                                }
-//                            }
-//                        }
-//                        if (item.movieList != null) {
-//                            // repeating list like tix.id app
-//                            val startIndex = Int.MAX_VALUE / 2
-//                            val pagerState = rememberPagerState(
-//                                initialPage = startIndex,
-//                                pageCount = { Int.MAX_VALUE }
-//                            )
-//                            LaunchedEffect(pagerState) {
-//                                snapshotFlow { pagerState.currentPage }.collect { page ->
-//                                    Log.d("Page change", "Page changed to ${(page - startIndex).floorMod(item.movieList.results.size)}")
-//                                }
-//                            }
-//                            PagerLayout {
-//                                HorizontalPager(
-//                                    contentPadding = PaddingValues(horizontal = 95.dp),
-//                                    modifier = Modifier
-//                                        .weight(1f, true)
-//                                        .fillMaxWidth(),
-//                                    state = pagerState,
-//                                    pageSpacing = (-20).dp
-//                                ) { index ->
-//                                    val pageIndex = (index - startIndex).floorMod(item.movieList.results.size)
-//                                    val pageOffset = pagerState.currentPage - index + pagerState.currentPageOffsetFraction
-//                                    HomePopularMovies(item.movieList.results[pageIndex], pageOffset, pageIndex)
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
             }
         }
     }
