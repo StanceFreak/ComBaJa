@@ -34,6 +34,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.stancefreak.combaja.R
 import com.stancefreak.combaja.data.response.Result
+import com.stancefreak.combaja.utils.BaseCardList
 import kotlin.math.absoluteValue
 
 @Composable
@@ -42,83 +43,72 @@ fun HomePopularMovies(
     pageOffset: Float,
     pageIndex: Int,
 ) {
-    Card(
-        modifier = Modifier
-            .graphicsLayer {
-                alpha = lerp(
-                    start = 0.7f,
-                    stop = 1f,
-                    fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f),
-                )
+    val cardModifier = Modifier
+        .graphicsLayer {
+            alpha = lerp(
+                start = 0.7f,
+                stop = 1f,
+                fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f),
+            )
 
-                cameraDistance = 8 * density
-                rotationY = lerp(
-                    start = 0f,
-                    stop = 0f,
-                    fraction = pageOffset.coerceIn(-1f, 1f),
-                )
+            cameraDistance = 8 * density
+            rotationY = lerp(
+                start = 0f,
+                stop = 0f,
+                fraction = pageOffset.coerceIn(-1f, 1f),
+            )
 
-                lerp(
-                    start = 0.8f,
-                    stop = 1f,
-                    fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f),
-                ).also { scale ->
-                    scaleX = scale
-                    scaleY = scale
-                }
+            lerp(
+                start = 0.8f,
+                stop = 1f,
+                fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f),
+            ).also { scale ->
+                scaleX = scale
+                scaleY = scale
             }
-            .padding(10.dp)
-            .wrapContentSize(),
-        shape = MaterialTheme.shapes.medium,
+        }
+        .padding(10.dp)
+        .wrapContentSize()
+
+    BaseCardList(
+        modifier = cardModifier,
+        posterPath = movie.posterPath
     ) {
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .padding(10.dp)
+                .size(16.dp)
+                .clip(CircleShape)
+                .background(colorResource(id = R.color.black))
+                .align(Alignment.TopEnd),
+            contentAlignment = Alignment.Center
         ) {
-            AsyncImage(
-                modifier = Modifier.fillMaxSize(),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://image.tmdb.org/t/p/w500${ movie.posterPath }")
-                    .crossfade(true)
-                    .build(),
-                contentScale = ContentScale.Fit,
-                contentDescription = null,
+            Text(
+                text = (pageIndex + 1).toString(),
+                color = colorResource(id = R.color.white),
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 10.sp
             )
+        }
+        AnimatedVisibility(
+            modifier = Modifier
+                .align(Alignment.BottomCenter),
+            visible = true,
+            enter = slideInVertically { it },
+            exit = slideOutVertically { it }
+        ) {
             Box(
                 modifier = Modifier
-                    .padding(10.dp)
-                    .size(16.dp)
-                    .clip(CircleShape)
+                    .fillMaxSize()
                     .background(colorResource(id = R.color.black))
-                    .align(Alignment.TopEnd),
+                    .padding(vertical = 5.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = (pageIndex + 1).toString(),
+                    text = "Pesan Sekarang",
                     color = colorResource(id = R.color.white),
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 10.sp
                 )
-            }
-            androidx.compose.animation.AnimatedVisibility(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter),
-                visible = true,
-                enter = slideInVertically { it },
-                exit = slideOutVertically { it }
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(colorResource(id = R.color.black))
-                        .padding(vertical = 5.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Pesan Sekarang",
-                        color = colorResource(id = R.color.white),
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                }
             }
         }
     }
